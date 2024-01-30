@@ -1,0 +1,37 @@
+{
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"EditorConfig.EditorConfig",
+				"GitHub.vscode-pull-request-github",
+				"Gruntfuggly.todo-tree",
+				"dbaeumer.vscode-eslint",
+				"exiasr.hadolint",
+				"firsttris.vscode-jest-runner",
+				"github.vscode-github-actions",
+				"mhutchie.git-graph",
+				"redhat.vscode-yaml",
+				"streetsidesoftware.code-spell-checker",
+				"vivaxy.vscode-conventional-commits",
+				"waderyan.gitblame",
+				"yoavbls.pretty-ts-errors"
+			],
+			"settings": {
+				// Ensure correct node version
+				"eslint.runtime": "/usr/local/bin/node"
+			}
+		}
+	},
+	"features": {
+		"ghcr.io/devcontainers/features/common-utils:2": {
+			"configureZshAsDefaultShell": true
+		},
+		"ghcr.io/dhoeric/features/hadolint:1": {}
+	},
+	"name": "DevContainer",
+	"onCreateCommand": "npm install",
+	"postCreateCommand": "echo \"PATH=\"${PATH}:${PWD}/node_modules/.bin\"\" >> ~/.zshrc"
+}

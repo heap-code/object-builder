@@ -1,0 +1,6 @@
+{
+	"recommendations": [
+		"github.codespaces",
+		"ms-vscode-remote.remote-containers"
+	]
+}

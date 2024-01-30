@@ -1,0 +1,23 @@
+dist/
+node_modules/
+package-lock.json
+
+# Generated files
+CHANGELOG.md
+
+# Do not ignore the rule configuration files
+!.*rc.json
+
+!.release-it.json
+
+!.vscode/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
+
+!.devcontainer/
+
+!.github/
+!.github/workflows/*.yml
