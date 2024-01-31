@@ -1,0 +1,63 @@
+# Note this is heavily taken and inspired from:
+# https://github.com/typescript-eslint/typescript-eslint/blob/main/.github/workflows/prettier-update.yml
+
+# This workflow is used to augment the capabilities of the renovate GitHub app by running a full
+# `prettier --write` when renovate opens a PR to change the version of prettier.
+
+name: Prettier Update
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - "package.json"
+      - "package-lock.json"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  maybe_prettier_update:
+    # Only run if it was the renovate bot that triggered the workflow (otherwise we'll create a loop)
+    if: contains('["renovate[bot]"]', github.actor) == true
+    name: Run prettier formatting if required
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+          node-version: 20.x
+
+      - name: Check if prettier was changed as part of the latest commit on the PR
+        id: prettier-package-check
+        run: |
+          git diff HEAD~1 -G"prettier" --exit-code package.json package-lock.json && echo "prettier unchanged" || echo "::set-output name=was-changed::true"
+
+      - name: Run prettier formatting if prettier was changed and commit the results
+        if: ${{ steps.prettier-package-check.outputs.was-changed == 'true' }}
+        env:
+          # We cannot use secrets.GITHUB_TOKEN for this because it is not permitted to kick off subsequent actions workflow runs, so we use a PAT instead
+          GITHUB_TOKEN: ${{ secrets.HC_TOKEN }}
+        run: |
+          npm ci
+          npm run lint:fix
+
+          # Commit all the changes to the PR (see note on not being able to use secrets.GITHUB_TOKEN for this)
+          git config user.name "heap-code[bot]"
+          git config user.email "${{ vars.HC_BOT }}@users.noreply.github.com"
+
+          # If the status is empty, there are no uncommitted changes
+          if [[ -z $(git status --porcelain) ]]; then
+            echo "No uncommitted changes"
+          else
+            git add --all
+            git commit -m "chore: update formatting after prettier upgrade"
+            git push
+          fi
