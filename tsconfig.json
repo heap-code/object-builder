@@ -1,0 +1,18 @@
+{
+	"compilerOptions": {
+		"declaration": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"moduleResolution": "Node",
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"outDir": "./dist/node",
+		"resolveJsonModule": true,
+		"rootDir": "./src",
+		"sourceMap": true,
+		"strict": true,
+		"target": "ES6"
+	},
+	"exclude": ["dist", "node_modules"]
+}

@@ -1,0 +1,7 @@
+{
+	"compilerOptions": {
+		"module": "ES2022",
+		"outDir": "../../dist/esm2022"
+	},
+	"extends": "../../tsconfig.build.json"
+}

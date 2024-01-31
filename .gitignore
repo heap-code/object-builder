@@ -1,0 +1,16 @@
+# compiled output
+coverage/
+dist/
+
+# dependencies
+node_modules/
+
+# IDEs
+/.idea
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json

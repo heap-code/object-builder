@@ -1,0 +1,66 @@
+name: Release & Publish
+
+on:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.head_ref || github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  job:
+    # Ignore the heap-code bot commits and devDependencies
+    if: ${{ github.actor != vars.HC_BOT && !(github.actor == 'renovate[bot]' && contains(github.event.head_commit.message, 'chore(deps):')) }}
+
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.HC_TOKEN }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.HC_TOKEN }}
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: "npm"
+
+      - name: Install packages
+        run: npm ci
+
+      - name: Generate code coverage summary
+        run: npm run test:coverage -- --ci --coverageReporters json-summary
+
+      - name: Generate code coverage badges
+        run: npx node-jest-badges -c coverage/coverage-summary.json -o .badges/code/
+      - name: Set default code coverage badge
+        run: cp .badges/code/coverage-jest\ coverage.svg .badges/code/coverage.svg
+
+      - name: Generate comment coverage badge
+        run: npm run compodoc:build
+      - name: Move generated comment badge
+        run: cp dist/compodoc/images/coverage-badge-documentation.svg ./.badges/comment/coverage.svg
+
+      - name: git config
+        run: |
+          git config user.name "heap-code[bot]"
+          git config user.email "${{ vars.HC_BOT }}@users.noreply.github.com"
+
+      - name: add badges
+        run: git add .badges
+
+        # NPM publish
+      - name: Clean for build
+        run: rm -r dist/
+      - name: Build
+        run: npm run build
+
+      - name: Set npm config
+        run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+      - name: Release
+        run: npx release-it --ci --no-git.requireCleanWorkingDir

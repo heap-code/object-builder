@@ -1,0 +1,31 @@
+{
+	"arrowParens": "avoid",
+	"htmlWhitespaceSensitivity": "css",
+	"overrides": [
+		{
+			"files": "*.json",
+			"options": {
+				"trailingComma": "none"
+			}
+		},
+		{
+			"files": "*.md",
+			"options": {
+				"parser": "markdown"
+			}
+		},
+		{
+			"files": "*.yml",
+			"options": {
+				"parser": "yaml",
+				"tabWidth": 2,
+				"useTabs": false
+			}
+		}
+	],
+	"semi": true,
+	"singleQuote": false,
+	"tabWidth": 4,
+	"trailingComma": "all",
+	"useTabs": true
+}
