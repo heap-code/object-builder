@@ -79,6 +79,20 @@
 			}
 		},
 		{
+			"files": ["renovate.json"],
+			"rules": {
+				"jsonc/sort-array-values": [
+					"warn",
+					{
+						"order": {
+							"type": "asc"
+						},
+						"pathPattern": "."
+					}
+				]
+			}
+		},
+		{
 			"extends": ["plugin:yml/prettier", "plugin:yml/recommended"],
 			"files": ["*.yaml", "*.yml"],
 			"parser": "yaml-eslint-parser"

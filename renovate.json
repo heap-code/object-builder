@@ -1,0 +1,17 @@
+{
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"automerge": true,
+	"automergeStrategy": "squash",
+	"extends": ["config:recommended", "group:definitelyTyped", "group:linters"],
+	"labels": ["dependencies", "renovate"],
+	"packageRules": [
+		{
+			"groupName": "Release it",
+			"groupSlug": "release-it",
+			"matchPackageNames": ["release-it"],
+			"matchPackagePrefixes": ["@release-it/"]
+		}
+	],
+	"rebaseWhen": "behind-base-branch",
+	"stabilityDays": 5
+}
