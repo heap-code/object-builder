@@ -19,4 +19,8 @@ export default {
 		],
 	},
 	transformIgnorePatterns: ["node_modules/(?!.*\\.mjs$)"],
+	watchPlugins: [
+		"jest-watch-typeahead/filename",
+		"jest-watch-typeahead/testname",
+	],
 } satisfies JestConfigWithTsJest;

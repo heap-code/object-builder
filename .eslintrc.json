@@ -388,6 +388,13 @@
 					}
 				]
 			}
+		},
+		{
+			"files": ["*.js", "*.ts"],
+			"rules": {
+				/* FIXME: There's a plugin that disables that rule (probably prettier) */
+				"curly": ["error", "all"]
+			}
 		}
 	],
 	"plugins": [
