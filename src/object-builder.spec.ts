@@ -68,11 +68,11 @@ describe("ObjectBuild", () => {
 		});
 
 		it("should be able to use a key that will be defined", () => {
-			interface Obj {
+			interface Prd {
 				fn: (a: number) => number;
 				prop: number;
 			}
-			const { fn, prop } = ObjectBuilder.create<Obj>()
+			const { fn, prop } = ObjectBuilder.create<Prd>()
 				.with("fn", self => (a: number) => self.prop + a)
 				.with("prop", () => 10)
 				.build();
@@ -84,9 +84,7 @@ describe("ObjectBuild", () => {
 			const { fn } = ObjectBuilder.create()
 				.with<"fn", (a: number) => number[]>(
 					"fn",
-					({ fn }) =>
-						a =>
-							a === 0 ? [0] : [a, ...fn(a - 1)],
+					self => a => (a === 0 ? [0] : [a, ...self.fn(a - 1)]),
 				)
 				.build();
 
@@ -94,17 +92,45 @@ describe("ObjectBuild", () => {
 		});
 
 		it("should be able to use recursion (with multiple methods)", () => {
-			interface Obj {
+			interface Prd {
 				even: (n: number) => boolean;
 				odd: (n: number) => boolean;
 			}
-			const { even, odd } = ObjectBuilder.create<Obj>()
+			const { even, odd } = ObjectBuilder.create<Prd>()
 				.with("even", s => n => (n === 0 ? true : !s.odd(n - 1)))
 				.with("odd", s => n => (n === 0 ? false : !s.even(n - 1)))
 				.build();
 
 			expect(even(10)).toBe(true);
 			expect(odd(10)).toBe(false);
+		});
+
+		it("should use the override key", () => {
+			interface Prd {
+				base: (a: number) => number;
+				diff: (a: number) => number;
+			}
+
+			const builder0 = ObjectBuilder.create<Prd>()
+				.with("base", self => a => self.diff(a) + 1)
+				.with("diff", () => a => a * 2);
+			const builder1 = builder0.override(
+				"diff",
+				(_, prev) => a => prev(a) * 2,
+			);
+
+			const prd1 = builder0.build();
+			const prd2 = builder1.build();
+			const prd3 = builder1
+				.override("diff", (_, prev) => a => prev(a) * 2)
+				.build();
+
+			const rnd = Math.round(Math.random() * 100);
+			expect(prd2.base(rnd)).toBeGreaterThan(prd1.base(rnd));
+
+			expect(prd1.base(10)).toBe(21);
+			expect(prd2.base(10)).toBe(41);
+			expect(prd3.base(10)).toBe(81);
 		});
 	});
 

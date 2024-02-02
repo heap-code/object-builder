@@ -195,12 +195,13 @@
 			"extends": [
 				"plugin:@typescript-eslint/recommended",
 				"plugin:@typescript-eslint/recommended-requiring-type-checking",
-				"plugin:@typescript-eslint/strict"
+				"plugin:@typescript-eslint/strict",
+				"plugin:typescript-sort-keys/recommended"
 			],
 			"files": ["*.ts"],
 			"parser": "@typescript-eslint/parser",
 			"parserOptions": {
-				"project": "./tsconfig.*?.json"
+				"project": "./tsconfig.lint.json"
 			},
 			"rules": {
 				"@typescript-eslint/array-type": [
@@ -282,8 +283,8 @@
 							]
 						},
 						"interfaces": {
-							"memberTypes": ["field", "constructor", "method"],
-							"order": "alphabetically"
+							/* Managed by typescript-sort-keys */
+							"memberTypes": "never"
 						}
 					}
 				],
