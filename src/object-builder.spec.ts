@@ -22,6 +22,9 @@ describe("ObjectBuild", () => {
 				.with("prop", () => "a")
 				.with("const", () => random)
 				.with("fn", () => (a: number) => a);
+			expect(builder.keys()).toEqual(
+				expect.arrayContaining(["const", "fn", "prop"]),
+			);
 
 			const objB = builder
 				.override("prop", () => "bc")
@@ -60,11 +63,12 @@ describe("ObjectBuild", () => {
 	describe("With self reference", () => {
 		it("should be able to use an already defined key", () => {
 			const { fn, prop } = ObjectBuilder.create()
-				.with("prop", () => 10)
+				.with("prop", () => 5)
 				.with("fn", self => (a: number) => self.prop + a)
 				.build();
 
-			expect(fn(10)).toBe(fn(10) + prop);
+			expect(prop).toBe(5);
+			expect(fn(10)).toBe(15);
 		});
 
 		it("should be able to use a key that will be defined", () => {
@@ -74,10 +78,11 @@ describe("ObjectBuild", () => {
 			}
 			const { fn, prop } = ObjectBuilder.create<Prd>()
 				.with("fn", self => (a: number) => self.prop + a)
-				.with("prop", () => 10)
+				.with("prop", () => 5)
 				.build();
 
-			expect(fn(10)).toBe(fn(10) + prop);
+			expect(prop).toBe(5);
+			expect(fn(10)).toBe(15);
 		});
 
 		it("should be able to use recursion", () => {
@@ -88,7 +93,7 @@ describe("ObjectBuild", () => {
 				)
 				.build();
 
-			expect(fn(5)).toStrictEqual([5, 4, 2, 1, 0]);
+			expect(fn(5)).toStrictEqual([5, 4, 3, 2, 1, 0]);
 		});
 
 		it("should be able to use recursion (with multiple methods)", () => {
@@ -117,6 +122,13 @@ describe("ObjectBuild", () => {
 			const builder1 = builder0.override(
 				"diff",
 				(_, prev) => a => prev(a) * 2,
+			);
+
+			expect(builder0.keys()).toEqual(
+				expect.arrayContaining(["base", "diff"]),
+			);
+			expect(builder1.keys()).toEqual(
+				expect.arrayContaining(builder0.keys()),
 			);
 
 			const prd1 = builder0.build();

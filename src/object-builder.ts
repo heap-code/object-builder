@@ -14,12 +14,15 @@ export class ObjectBuilder<
 	public static create<
 		const Product extends Record<ProductKey, any>,
 	>(): ObjectBuilder<Product, Record<never, never>> {
-		return new ObjectBuilder();
+		return new ObjectBuilder(new Map() as never);
 	}
 
-	private constructor() {
-		throw new Error("TODO");
-	}
+	private constructor(
+		private readonly fns: ReadonlyMap<
+			keyof Current,
+			<K extends keyof Current>(product: Current) => Current[K]
+		>,
+	) {}
 
 	/**
 	 * Builds the product of this builder.
@@ -63,7 +66,13 @@ export class ObjectBuilder<
 	public build<P = Product>(): Current extends P
 		? Current
 		: NonExhaustiveProduct {
-		throw new Error("TODO");
+		return Array.from(this.fns.entries()).reduce(
+			(self, [key, handler]) =>
+				Object.defineProperty(self, key, {
+					get: () => handler(self as Current),
+				}),
+			{},
+		) as never;
 	}
 
 	/**
@@ -72,20 +81,36 @@ export class ObjectBuilder<
 	 * @returns the currently set keys
 	 */
 	public keys(): Array<keyof Current> {
-		throw new Error("TODO");
+		return Array.from(this.fns.keys());
 	}
 
 	public with<const Key extends keyof Product, const T extends Product[Key]>(
-		_0: Key,
-		_1: (self: Omit<Current, Key> & Product & Record<Key, T>) => T,
+		key: Key,
+		handler: (self: Omit<Current, Key> & Product & Record<Key, T>) => T,
 	): ObjectBuilder<Product, Omit<Current, Key> & Record<Key, T>> {
-		throw new Error("TODO");
+		// @ts-expect-error -- From parameter
+		return new ObjectBuilder(
+			// @ts-expect-error -- New key added
+			new Map([...Array.from(this.fns.entries()), [key, handler]]),
+		);
 	}
 
 	public override<const Key extends keyof Current>(
-		_0: Key,
-		_1: (self: Current & Product, curr: Current[Key]) => Current[Key],
+		key: Key,
+		handler: (
+			self: Current & Product,
+			previous: Current[Key],
+		) => Current[Key],
 	): this {
-		throw new OverrideUnsetKeyException("TODO");
+		const previous = this.fns.get(key);
+		if (!previous) {
+			throw new OverrideUnsetKeyException("TODO");
+		}
+
+		// @ts-expect-error -- A lot of casts.
+		return this.with(
+			key as never,
+			self => handler(self, previous<Key>(self)) as never,
+		);
 	}
 }
