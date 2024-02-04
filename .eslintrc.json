@@ -142,6 +142,30 @@
 					}
 				],
 				"jsdoc/require-throws": "warn",
+				"jsdoc/sort-tags": [
+					"warn",
+					{
+						"tagSequence": [
+							{
+								"tags": ["deprecated", "see"]
+							},
+							{
+								"tags": ["example"]
+							},
+							{
+								"tags": ["-other"]
+							},
+							{
+								"tags": [
+									"template",
+									"param",
+									"throws",
+									"returns"
+								]
+							}
+						]
+					}
+				],
 				"jsdoc/tag-lines": [
 					"error",
 					"any",

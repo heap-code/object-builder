@@ -1,6 +1,6 @@
 import { expectAssignable, expectType } from "tsd";
 
-import { NonExhaustiveProduct, ObjectBuilder } from ".";
+import { BuilderIncompleteProduct, ObjectBuilder } from ".";
 
 // Use anonymous function to simulate a `describe`/`it` structure.
 
@@ -53,7 +53,7 @@ interface Prd {
 	const builder0 = ObjectBuilder.create()
 		.with("prop", () => 0)
 		.with("const", () => "");
-	expectType<NonExhaustiveProduct>(builder0.build<Prd>());
+	expectType<BuilderIncompleteProduct>(builder0.build<Prd>());
 	expectAssignable<{ const: string; prop: number }>(
 		builder0.build<unknown>(),
 	);
@@ -83,8 +83,8 @@ interface Prd {
 () => {
 	// It should fail on incomplete product
 
-	expectType<NonExhaustiveProduct>(ObjectBuilder.create<Prd>().build());
-	expectType<NonExhaustiveProduct>(
+	expectType<BuilderIncompleteProduct>(ObjectBuilder.create<Prd>().build());
+	expectType<BuilderIncompleteProduct>(
 		ObjectBuilder.create<Prd>()
 			.with("prop", () => 0)
 			.build(),
@@ -92,7 +92,7 @@ interface Prd {
 
 	const builder = ObjectBuilder.create<Prd>().with("fn", () => a => a + 1);
 	expectAssignable<Pick<Prd, "fn">>(builder.build<unknown>());
-	expectType<NonExhaustiveProduct>(builder.build());
+	expectType<BuilderIncompleteProduct>(builder.build());
 };
 
 () => {

@@ -75,7 +75,7 @@
 		"build:types": "npx tsc -p tools/tsconfigs/tsconfig.types.json",
 		"build:umd": "npx webpack",
 		"compodoc": "npm run compodoc:build -- -r 3080 -s",
-		"compodoc:build": "npx @compodoc/compodoc -p ./tsconfig.build.json -d ./dist/compodoc",
+		"compodoc:build": "npx @compodoc/compodoc --disableInternal --disablePrivate -p ./tsconfig.build.json -d ./dist/compodoc",
 		"compodoc:coverage": "npm run compodoc:build -- --coverageTest 85 --silent",
 		"lint": "eslint .",
 		"lint:fix": "npm run lint -- --fix",
