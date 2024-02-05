@@ -54,12 +54,6 @@ jobs:
       - name: add badges
         run: git add .badges
 
-        # NPM publish
-      - name: Clean for build
-        run: rm -r dist/
-      - name: Build
-        run: npm run build
-
       - name: Set npm config
         run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
       - name: Release
