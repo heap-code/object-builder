@@ -4,7 +4,7 @@ import { BuilderIncompleteProduct, ObjectBuilder } from ".";
 
 // Use anonymous function to simulate a `describe`/`it` structure.
 
-interface Prd {
+interface Ptr {
 	fn: (a: number) => number;
 	prop: number;
 }
@@ -53,15 +53,15 @@ interface Prd {
 	const builder0 = ObjectBuilder.create()
 		.with("prop", () => 0)
 		.with("const", () => "");
-	expectType<BuilderIncompleteProduct>(builder0.build<Prd>());
+	expectType<BuilderIncompleteProduct>(builder0.build<Ptr>());
 	expectAssignable<{ const: string; prop: number }>(
 		builder0.build<unknown>(),
 	);
 
 	const builder = builder0.with("fn", () => (a: number) => a);
-	const prd = builder.build<Prd>();
-	expectAssignable<Prd>(prd);
-	expectAssignable<Prd & { const: string }>(prd);
+	const prd = builder.build<Ptr>();
+	expectAssignable<Ptr>(prd);
+	expectAssignable<Ptr & { const: string }>(prd);
 
 	expectType<Array<keyof typeof prd>>(builder.keys());
 };
@@ -69,13 +69,13 @@ interface Prd {
 () => {
 	// It should correctly type "self" and arguments from Product
 
-	ObjectBuilder.create<Prd>()
+	ObjectBuilder.create<Ptr>()
 		.with("fn", () => a => {
 			expectType<number>(a);
 			return a + 1;
 		})
 		.with("prop", self => {
-			expectAssignable<Prd>(self);
+			expectAssignable<Ptr>(self);
 			return 0;
 		});
 };
@@ -83,15 +83,15 @@ interface Prd {
 () => {
 	// It should fail on incomplete product
 
-	expectType<BuilderIncompleteProduct>(ObjectBuilder.create<Prd>().build());
+	expectType<BuilderIncompleteProduct>(ObjectBuilder.create<Ptr>().build());
 	expectType<BuilderIncompleteProduct>(
-		ObjectBuilder.create<Prd>()
+		ObjectBuilder.create<Ptr>()
 			.with("prop", () => 0)
 			.build(),
 	);
 
-	const builder = ObjectBuilder.create<Prd>().with("fn", () => a => a + 1);
-	expectAssignable<Pick<Prd, "fn">>(builder.build<unknown>());
+	const builder = ObjectBuilder.create<Ptr>().with("fn", () => a => a + 1);
+	expectAssignable<Pick<Ptr, "fn">>(builder.build<unknown>());
 	expectType<BuilderIncompleteProduct>(builder.build());
 };
 

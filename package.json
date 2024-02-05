@@ -8,7 +8,7 @@
 			"path": "./node_modules/cz-conventional-changelog"
 		}
 	},
-	"description": "",
+	"description": "Builder pattern for objects",
 	"devDependencies": {
 		"@compodoc/compodoc": "^1.1.23",
 		"@release-it/conventional-changelog": "^8.0.1",
@@ -57,6 +57,13 @@
 		"types": "./dist/types/index.d.ts"
 	},
 	"homepage": "https://github.com/heap-code/object-builder",
+	"keywords": [
+		"builder",
+		"builder-pattern",
+		"design-pattern",
+		"object",
+		"object-builder"
+	],
 	"license": "MIT",
 	"name": "@heap-code/object-builder",
 	"publishConfig": {
@@ -84,5 +91,6 @@
 		"test:types": "tsd -t test-d/index.d.ts -f test-d/index.test-d.ts",
 		"test:watch": "npm run test -- --watch"
 	},
+	"types": "./dist/types/index.d.ts",
 	"version": "0.0.0"
 }

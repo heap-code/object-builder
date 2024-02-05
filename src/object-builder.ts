@@ -11,12 +11,12 @@ import {
  * Builder for an object.
  * It can replace the creation of a simple object or a multi-level class hierarchy.
  *
- * @template Product is the product expected from an {@link ObjectBuilder}.
- * @template Current is the current object that will be builded (product) for an {@link ObjectBuilder} instance.
+ * @template Pattern is the product expected from the {@link ObjectBuilder}.
+ * @template Product is the actual object that will be builded (product) for an {@link ObjectBuilder} instance.
  */
 export class ObjectBuilder<
-	const Product extends Record<BuilderProductKey, any>,
-	const Current extends Record<never, never>,
+	const Pattern extends Record<BuilderProductKey, any>,
+	const Product extends Record<never, never>,
 > {
 	// TODO: create from?
 
@@ -26,15 +26,15 @@ export class ObjectBuilder<
 	 * @returns An {@link ObjectBuilder}
 	 */
 	public static create<
-		const Product extends Record<BuilderProductKey, any>,
-	>(): ObjectBuilder<Product, Record<never, never>> {
+		const Pattern extends Record<BuilderProductKey, any>,
+	>(): ObjectBuilder<Pattern, Record<never, never>> {
 		return new ObjectBuilder(new Map() as never);
 	}
 
 	private constructor(
 		private readonly handlers: ReadonlyMap<
-			keyof Current,
-			<K extends keyof Current>(product: Current) => Current[K]
+			keyof Product,
+			<K extends keyof Product>(product: Product) => Product[K]
 		>,
 	) {}
 
@@ -73,13 +73,13 @@ export class ObjectBuilder<
 	 * 	Use `unknown` to ignore this constraint.
 	 * @returns the final product
 	 */
-	public build<P = Product>(): Current extends P
-		? Current
+	public build<P = Pattern>(): Product extends P
+		? Product
 		: BuilderIncompleteProduct {
 		return Array.from(this.handlers.entries()).reduce(
 			(self, [key, handler]) =>
 				Object.defineProperty(self, key, {
-					get: () => handler(self as Current),
+					get: () => handler(self as Product),
 				}),
 			{},
 		) as never;
@@ -90,7 +90,7 @@ export class ObjectBuilder<
 	 *
 	 * @returns the currently set keys
 	 */
-	public keys(): Array<keyof Current> {
+	public keys(): Array<keyof Product> {
 		return Array.from(this.handlers.keys());
 	}
 
@@ -102,13 +102,13 @@ export class ObjectBuilder<
 	 * @returns a new builder with the added handler
 	 */
 	public with<
-		const Key extends keyof Product,
-		const T extends Product[Key],
+		const Key extends keyof Pattern,
+		const T extends Pattern[Key],
 		_, // HACK: this allows to use `self` without "breaking" the type inference (`& Record<Key, T>`)
 	>(
 		key: Key,
-		handler: BuilderHandler<Omit<Current, Key> & Product, T>,
-	): ObjectBuilder<Product, Omit<Current, Key> & Record<Key, T>>;
+		handler: BuilderHandler<Omit<Product, Key> & Pattern, T>,
+	): ObjectBuilder<Pattern, Omit<Product, Key> & Record<Key, T>>;
 	/**
 	 * Adds a [handler]{@link BuilderHandler} on the call of a given key.
 	 *
@@ -116,13 +116,13 @@ export class ObjectBuilder<
 	 * @param handler for the given key
 	 * @returns a new builder with the added handler
 	 */
-	public with<const Key extends keyof Product, const T extends Product[Key]>(
+	public with<const Key extends keyof Pattern, const T extends Pattern[Key]>(
 		key: Key,
 		handler: BuilderHandler<
-			Omit<Current, Key> & Product & Record<Key, T>,
+			Omit<Product, Key> & Pattern & Record<Key, T>,
 			T
 		>,
-	): ObjectBuilder<Product, Omit<Current, Key> & Record<Key, T>>;
+	): ObjectBuilder<Pattern, Omit<Product, Key> & Record<Key, T>>;
 	/**
 	 * Adds a [handler]{@link BuilderHandler} on the call of a given key.
 	 *
@@ -130,13 +130,13 @@ export class ObjectBuilder<
 	 * @param handler for the given key
 	 * @returns a new builder with the added handler
 	 */
-	public with<const Key extends keyof Product, const T extends Product[Key]>(
+	public with<const Key extends keyof Pattern, const T extends Pattern[Key]>(
 		key: Key,
 		handler: BuilderHandler<
-			Omit<Current, Key> & Product & Record<Key, T>,
+			Omit<Product, Key> & Pattern & Record<Key, T>,
 			T
 		>,
-	): ObjectBuilder<Product, Omit<Current, Key> & Record<Key, T>> {
+	): ObjectBuilder<Pattern, Omit<Product, Key> & Record<Key, T>> {
 		// @ts-expect-error -- From parameter
 		return new ObjectBuilder(
 			// @ts-expect-error -- New key added
@@ -154,9 +154,9 @@ export class ObjectBuilder<
 	 * @throws {OverrideUnsetKeyException} when the key is not already set
 	 * @returns a new builder with the overridden key
 	 */
-	public override<const Key extends keyof Current>(
+	public override<const Key extends keyof Product>(
 		key: Key,
-		handler: BuilderHandlerOverride<Current & Product, Current[Key]>,
+		handler: BuilderHandlerOverride<Pattern & Product, Product[Key]>,
 	): this {
 		const previous = this.handlers.get(key);
 		if (!previous) {

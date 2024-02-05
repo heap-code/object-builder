@@ -72,11 +72,11 @@ describe("ObjectBuild", () => {
 		});
 
 		it("should be able to use a key that will be defined", () => {
-			interface Prd {
+			interface Ptr {
 				fn: (a: number) => number;
 				prop: number;
 			}
-			const { fn, prop } = ObjectBuilder.create<Prd>()
+			const { fn, prop } = ObjectBuilder.create<Ptr>()
 				.with("fn", self => (a: number) => self.prop + a)
 				.with("prop", () => 5)
 				.build();
@@ -97,11 +97,11 @@ describe("ObjectBuild", () => {
 		});
 
 		it("should be able to use recursion (with multiple methods)", () => {
-			interface Prd {
+			interface Ptr {
 				even: (n: number) => boolean;
 				odd: (n: number) => boolean;
 			}
-			const { even, odd } = ObjectBuilder.create<Prd>()
+			const { even, odd } = ObjectBuilder.create<Ptr>()
 				.with("even", s => n => (n === 0 ? true : !s.odd(n - 1)))
 				.with("odd", s => n => (n === 0 ? false : !s.even(n - 1)))
 				.build();
@@ -111,12 +111,12 @@ describe("ObjectBuild", () => {
 		});
 
 		it("should use the override key", () => {
-			interface Prd {
+			interface Ptr {
 				base: (a: number) => number;
 				diff: (a: number) => number;
 			}
 
-			const builder0 = ObjectBuilder.create<Prd>()
+			const builder0 = ObjectBuilder.create<Ptr>()
 				.with("base", self => a => self.diff(a) + 1)
 				.with("diff", () => a => a * 2);
 			const builder1 = builder0.override(
