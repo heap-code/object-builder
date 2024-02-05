@@ -37,7 +37,7 @@ jobs:
         run: npm run test:coverage -- --ci --coverageReporters json-summary
 
       - name: Generate code coverage badges
-        run: npx node-jest-badges -c coverage/coverage-summary.json -o .badges/code/
+        run: npx --yes node-jest-badges -c coverage/coverage-summary.json -o .badges/code/
       - name: Set default code coverage badge
         run: cp .badges/code/coverage-jest\ coverage.svg .badges/code/coverage.svg
 

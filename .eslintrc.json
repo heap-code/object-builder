@@ -111,7 +111,7 @@
 				"markdownlint/md033": [
 					"error",
 					{
-						"allowed_elements": ["a", "img"]
+						"allowed_elements": ["details", "summary", "code"]
 					}
 				],
 				"no-trailing-spaces": "off",
@@ -142,6 +142,30 @@
 					}
 				],
 				"jsdoc/require-throws": "warn",
+				"jsdoc/sort-tags": [
+					"warn",
+					{
+						"tagSequence": [
+							{
+								"tags": ["deprecated", "see"]
+							},
+							{
+								"tags": ["example"]
+							},
+							{
+								"tags": ["-other"]
+							},
+							{
+								"tags": [
+									"template",
+									"param",
+									"throws",
+									"returns"
+								]
+							}
+						]
+					}
+				],
 				"jsdoc/tag-lines": [
 					"error",
 					"any",
@@ -195,12 +219,13 @@
 			"extends": [
 				"plugin:@typescript-eslint/recommended",
 				"plugin:@typescript-eslint/recommended-requiring-type-checking",
-				"plugin:@typescript-eslint/strict"
+				"plugin:@typescript-eslint/strict",
+				"plugin:typescript-sort-keys/recommended"
 			],
 			"files": ["*.ts"],
 			"parser": "@typescript-eslint/parser",
 			"parserOptions": {
-				"project": "./tsconfig.*?.json"
+				"project": "./tsconfig.lint.json"
 			},
 			"rules": {
 				"@typescript-eslint/array-type": [
@@ -282,8 +307,8 @@
 							]
 						},
 						"interfaces": {
-							"memberTypes": ["field", "constructor", "method"],
-							"order": "alphabetically"
+							/* Managed by typescript-sort-keys */
+							"memberTypes": "never"
 						}
 					}
 				],
@@ -387,6 +412,13 @@
 						"ignore": ["describe"]
 					}
 				]
+			}
+		},
+		{
+			"files": ["*.js", "*.ts"],
+			"rules": {
+				/* FIXME: There's a plugin that disables that rule (probably prettier) */
+				"curly": ["error", "all"]
 			}
 		}
 	],

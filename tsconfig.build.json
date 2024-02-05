@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
 		"declaration": false,
+		"removeComments": true,
 		"skipLibCheck": true
 	},
 	"exclude": ["jest.config.ts", "src/**/*.spec.ts"],

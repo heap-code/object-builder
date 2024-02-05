@@ -8,7 +8,7 @@
 			"path": "./node_modules/cz-conventional-changelog"
 		}
 	},
-	"description": "",
+	"description": "Builder pattern for objects",
 	"devDependencies": {
 		"@compodoc/compodoc": "^1.1.23",
 		"@release-it/conventional-changelog": "^8.0.1",
@@ -31,15 +31,18 @@
 		"eslint-plugin-sort-destructure-keys": "^1.5.0",
 		"eslint-plugin-sort-exports": "^0.9.1",
 		"eslint-plugin-sort-keys-plus": "^1.4.0",
+		"eslint-plugin-typescript-sort-keys": "^3.1.0",
 		"eslint-plugin-unicorn": "^50.0.1",
 		"eslint-plugin-unused-imports": "^3.0.0",
 		"eslint-plugin-yml": "^1.12.2",
 		"jest": "^29.7.0",
+		"jest-watch-typeahead": "^2.2.2",
 		"prettier": "^3.2.4",
 		"release-it": "^17.0.3",
 		"ts-jest": "^29.1.2",
 		"ts-loader": "^9.5.1",
 		"ts-node": "^10.9.2",
+		"tsd": "^0.30.4",
 		"webpack": "^5.90.0",
 		"webpack-cli": "^5.1.4",
 		"webpack-node-externals": "^3.0.0"
@@ -54,6 +57,13 @@
 		"types": "./dist/types/index.d.ts"
 	},
 	"homepage": "https://github.com/heap-code/object-builder",
+	"keywords": [
+		"builder",
+		"builder-pattern",
+		"design-pattern",
+		"object",
+		"object-builder"
+	],
 	"license": "MIT",
 	"name": "@heap-code/object-builder",
 	"publishConfig": {
@@ -72,13 +82,15 @@
 		"build:types": "npx tsc -p tools/tsconfigs/tsconfig.types.json",
 		"build:umd": "npx webpack",
 		"compodoc": "npm run compodoc:build -- -r 3080 -s",
-		"compodoc:build": "npx @compodoc/compodoc -p ./tsconfig.build.json -d ./dist/compodoc",
-		"compodoc:coverage": "npm run compodoc:build -- --coverageTest 80",
+		"compodoc:build": "npx @compodoc/compodoc --disableInternal --disablePrivate -p ./tsconfig.build.json -d ./dist/compodoc",
+		"compodoc:coverage": "npm run compodoc:build -- --coverageTest 85 --silent",
 		"lint": "eslint .",
 		"lint:fix": "npm run lint -- --fix",
 		"test": "jest --config jest.config.ts",
 		"test:coverage": "npm run test -- --coverage",
+		"test:types": "tsd -t test-d/index.d.ts -f test-d/index.test-d.ts",
 		"test:watch": "npm run test -- --watch"
 	},
+	"types": "./dist/types/index.d.ts",
 	"version": "0.0.0"
 }
