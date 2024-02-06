@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/heap-code/object-builder/compare/v0.1.2...v0.1.3) (2024-02-06)
+
+
+### Bug Fixes
+
+* correct module export (in `package.json`) ([e517da9](https://github.com/heap-code/object-builder/commit/e517da9d906681cc19fb3d5cd7347789b124beb0))
+
 ## [0.1.2](https://github.com/heap-code/object-builder/compare/v0.1.1...v0.1.2) (2024-02-06)
 
 ## 0.1.1 (2024-02-06)
