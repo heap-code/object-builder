@@ -43,7 +43,7 @@ this package can easily be used in browsers like this:
 >
 > ```html
 > <script
->  src="https://cdn.jsdelivr.net/npm/@heap-code/object-builder@0.0.0/dist/bundles/object-builder.umd.min.js"
+>  src="https://cdn.jsdelivr.net/npm/@heap-code/object-builder@0.1.1/dist/bundles/object-builder.umd.min.js"
 >  type="application/javascript"
 > ></script>
 > ```
