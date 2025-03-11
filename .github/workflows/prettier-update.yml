@@ -33,7 +33,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: "npm"
-          node-version: 20.x
+          node-version: 22.x
 
       - name: Check if prettier was changed as part of the latest commit on the PR
         id: prettier-package-check
